@@ -4,9 +4,21 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
+
 import java.awt.CardLayout;
 import javax.swing.JTextField;
 import java.awt.Window.Type;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+
 import javax.swing.JLayeredPane;
 import java.awt.Color;
 
@@ -16,20 +28,37 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import java.awt.Font;
+import javax.swing.JFormattedTextField;
+import javax.swing.JTextArea;
 
 public class ClientSide extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private JTextField sentMsg;
+	private JTextField serverIP;
+	private JTextField serverPort;
+	private JTextField localIP;
+	private JTextField localPort;
 	private JLabel lblNewLabel_1;
 	private JLabel lblLocalPort;
 	private JLabel lblServerIp;
 	private JLabel lblServerPort;
-	private JLabel lblNewLabel_2;
+	private JLabel connect;
+	private JLabel send;
+	private ArrayList<String> clientMsgs;
+	private ArrayList<String> serverMsgs;
+	private Socket clientSocket;
+	private DataOutputStream toServer;
+	private BufferedReader inFromServer;
+	private final static JTextArea receivedMsg = new JTextArea();
+
+	public JLabel getConnect() {
+		return connect;
+	}
+
+	public JLabel getSend() {
+		return send;
+	}
 
 	/**
 	 * Launch the application.
@@ -58,44 +87,38 @@ public class ClientSide extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-		textField.setToolTipText("Send Message ...");
-		textField.setBounds(12, 387, 500, 32);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		sentMsg = new JTextField();
+		sentMsg.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+		sentMsg.setToolTipText("Send Message ...");
+		sentMsg.setBounds(12, 387, 500, 32);
+		contentPane.add(sentMsg);
+		sentMsg.setColumns(10);
 		
 				
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon("Images/Send.png"));
-		lblNewLabel.setBounds(522, 395, 24, 24);
-		contentPane.add(lblNewLabel);
+		send = new JLabel("");
+		send.setIcon(new ImageIcon("Images/Send.png"));
+		send.setBounds(522, 395, 24, 24);
+		contentPane.add(send);
 		
+		serverIP = new JTextField();
+		serverIP.setBounds(101, 432, 116, 22);
+		contentPane.add(serverIP);
+		serverIP.setColumns(10);
 		
-		JTextPane textPane = new JTextPane();
-		textPane.setFont(new Font("Baskerville Old Face", Font.BOLD, 18));
-		textPane.setBounds(12, 13, 534, 361);
-		contentPane.add(textPane);
+		serverPort = new JTextField();
+		serverPort.setBounds(101, 467, 116, 22);
+		contentPane.add(serverPort);
+		serverPort.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(101, 432, 116, 22);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		localIP = new JTextField();
+		localIP.setColumns(10);
+		localIP.setBounds(344, 432, 116, 22);
+		contentPane.add(localIP);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(101, 467, 116, 22);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
-		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(344, 432, 116, 22);
-		contentPane.add(textField_3);
-		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(344, 467, 116, 22);
-		contentPane.add(textField_4);
+		localPort = new JTextField();
+		localPort.setColumns(10);
+		localPort.setBounds(344, 467, 116, 22);
+		contentPane.add(localPort);
 		
 		lblNewLabel_1 = new JLabel("Local IP");
 		lblNewLabel_1.setBounds(265, 435, 56, 16);
@@ -113,10 +136,118 @@ public class ClientSide extends JFrame {
 		lblServerPort.setBounds(13, 467, 76, 16);
 		contentPane.add(lblServerPort);
 		
-		lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setBounds(486, 432, 60, 60);
-		contentPane.add(lblNewLabel_2);
-		lblNewLabel_2.setIcon(new ImageIcon("Images/Connect.png"));
+		connect = new JLabel("");
+		connect.setBounds(486, 432, 60, 60);
+		contentPane.add(connect);
+		connect.setIcon(new ImageIcon("Images/Connect.png"));
+		receivedMsg.setWrapStyleWord(true);
+		receivedMsg.setLineWrap(true);
+		receivedMsg.setFont(new Font("Berlin Sans FB Demi", Font.BOLD, 20));
+		receivedMsg.setBounds(12, 13, 534, 361);
+		contentPane.add(receivedMsg);
+		
+		send.addMouseListener(new MouseHandler());
+		connect.addMouseListener(new MouseHandler());
+		
+		clientMsgs=new ArrayList<String>();
+		serverMsgs=new ArrayList<String>();
 
+	}
+	
+	private class MouseHandler implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(e.getSource().equals(getSend())) {
+				sendMessage(sentMsg.getText());
+				
+			}else if(e.getSource().equals(getConnect())) {
+				if(establishConnection(serverIP.getText(),serverPort.getText())) {
+					connect.setIcon(new ImageIcon("Images/Connected.png"));
+				}
+				
+			}
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+
+	public boolean establishConnection(String serverIP,String serverPort) {
+		try {
+			clientSocket=new Socket(serverIP,Integer.parseInt(serverPort));
+			toServer=new DataOutputStream(clientSocket.getOutputStream());
+			if(clientSocket.isConnected())
+			return true;
+			inFromServer= new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
+			Thread threadX=new Thread(new ClientListener(inFromServer));
+			threadX.start();
+			
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean closeConnection() {
+		try {
+			if(!clientSocket.isClosed()) {
+			clientSocket.close();
+			return true;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean sendMessage(String Msg) {
+		try {
+			if(clientSocket.isConnected()) {
+			toServer.writeBytes(Msg+'\n');
+			clientMsgs.add(Msg);
+			updateUI("Client: "+Msg);
+			return true;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static void updateUI(String Msg) {
+		receivedMsg.append(Msg+"\n");
 	}
 }
