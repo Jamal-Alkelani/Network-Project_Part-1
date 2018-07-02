@@ -10,6 +10,7 @@ public class ClientListener implements Runnable {
 	
 	@Override
 	public void run() {
+		while (true) {
 		try {
 			serverMsg=inFromServer.readLine();
 			Thread.sleep(100);
@@ -22,10 +23,10 @@ public class ClientListener implements Runnable {
 		}
 		
 		if(!serverMsg.isEmpty()) {
-			ClientSide.updateUI("Server: "+serverMsg);
+			ClientSide.updateUI("Server: "+serverMsg+"\n");
 			serverMsg="";
 		}
 		
 	}
-
+	}
 }

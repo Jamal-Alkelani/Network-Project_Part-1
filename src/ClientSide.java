@@ -200,12 +200,13 @@ public class ClientSide extends JFrame {
 		try {
 			clientSocket=new Socket(serverIP,Integer.parseInt(serverPort));
 			toServer=new DataOutputStream(clientSocket.getOutputStream());
-			if(clientSocket.isConnected())
-			return true;
+			if(clientSocket.isConnected()) {
+			
 			inFromServer= new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
 			Thread threadX=new Thread(new ClientListener(inFromServer));
 			threadX.start();
-			
+			return true;
+			}
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
