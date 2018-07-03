@@ -50,6 +50,7 @@ public class ClientSide extends JFrame {
 	private BufferedReader inFromServer;
 	private final static JTextArea receivedMsg = new JTextArea();
 	private JLabel disconnect;
+	private Thread threadX;
 	
 	public JLabel getDisconnect() {
 		return disconnect;
@@ -200,7 +201,7 @@ public class ClientSide extends JFrame {
 				
 			
 			inFromServer= new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
-			Thread threadX=new Thread(new ClientListener(inFromServer));
+			threadX=new Thread(new ClientListener(inFromServer));
 			threadX.start();
 			return true;
 			}
@@ -215,6 +216,8 @@ public class ClientSide extends JFrame {
 		try {
 			if(!clientSocket.isClosed()) {
 			clientSocket.close();
+			ClientListener.stopThread=true;
+			
 			return true;
 			}
 		} catch (IOException e) {
