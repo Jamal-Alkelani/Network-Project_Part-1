@@ -20,6 +20,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 
 import javax.swing.Icon;
@@ -202,16 +204,10 @@ public class ClientSide extends JFrame {
 			threadX.start();
 			return true;
 			}
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (Exception e) {
+		JOptionPane.showMessageDialog(null, "error ! \n check your IP or server port number");
+			
+		} 
 		return false;
 	}
 	
@@ -234,6 +230,7 @@ public class ClientSide extends JFrame {
 			toServer.writeBytes(Msg+'\n');
 			clientMsgs.add(Msg);
 			updateUI("Client: "+Msg);
+			sentMsg.setText("");
 			return true;
 			}
 		} catch (IOException e) {
