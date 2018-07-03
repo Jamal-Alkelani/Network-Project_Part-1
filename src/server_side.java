@@ -63,8 +63,9 @@ public class server_side extends JFrame {
 	
 	public void setList (String []str) {
 		//System.out.println("here");
-		for (int i=0;i<str.length;i++)
+		for (int i=0;i<str.length;i++) {
 			//System.out.println(str[i]);
+		}
 		list= new JList(str);
 		list.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		scrollPane.setViewportView(list);

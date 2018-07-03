@@ -19,29 +19,37 @@ public class client_socket extends Thread {
        @Override 
        
        public void run() {
-    	 while(true) {  
+    	   boolean stopConnection=false;
+    	 while(!stopConnection) {  
     	   try {
 			
     		   BufferedReader inFromClient = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
 		
     		   sentence = clientSocket.getLocalAddress().toString();
+    		   String msg=inFromClient.readLine();
+    		  if(msg.equals(null)||msg.equals("null")) {
+    			  throw new Exception();
+    		  }
     		  
-    		   sentence= "\n"+sentence+"  : "+inFromClient.readLine()+ "\n"; 
+    		   sentence= "\n"+sentence+"  : "+msg+ "\n"; 
+    		   
     		   
     		   serverUI.setText(sentence);
-    		   
+    		   System.out.println(stopConnection);
     		  // System.out.println(sentence);
     		   
     		   
     	   // print it to the text field
     	   
-    	   } catch (IOException e) {
+    	   } catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			variables.socketArray.remove(clientSocket);
+    	//	   System.out.println(variables.socketArray.size());
+    		   variables.socketArray.remove(clientSocket);
 			//System.out.println(variables.socketArray.size());
 			serverUI.setList(variables.getIPs());
-			break;
+			stopConnection=true;
+			
 			
 		} 
 	          
