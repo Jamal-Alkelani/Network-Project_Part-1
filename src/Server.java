@@ -53,7 +53,7 @@ public class Server extends Thread {
 			// System.out.println(variables.socketArray.size() +"\n");
 			 
 			 serverUI.setList(variables.getIPs());
-			 
+			   
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

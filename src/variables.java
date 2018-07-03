@@ -23,6 +23,7 @@ public class variables {
 			  IPs[i]= socketArray.get(i).getLocalAddress().toString();
 		
 		  }
+		  
 		
 		return IPs;
 	}

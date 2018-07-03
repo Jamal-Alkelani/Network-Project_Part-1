@@ -201,6 +201,7 @@ public class ClientSide extends JFrame {
 			clientSocket=new Socket(serverIP,Integer.parseInt(serverPort));
 			toServer=new DataOutputStream(clientSocket.getOutputStream());
 			if(clientSocket.isConnected()) {
+				
 			
 			inFromServer= new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); 
 			Thread threadX=new Thread(new ClientListener(inFromServer));

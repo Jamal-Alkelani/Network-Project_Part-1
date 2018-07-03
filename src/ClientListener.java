@@ -22,6 +22,7 @@ public class ClientListener implements Runnable {
 			e.printStackTrace();
 		}
 		
+		
 		if(!serverMsg.isEmpty()) {
 			ClientSide.updateUI("Server: "+serverMsg+"\n");
 			serverMsg="";

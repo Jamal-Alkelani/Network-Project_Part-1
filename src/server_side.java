@@ -160,7 +160,7 @@ public class server_side extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-		
+		 
 				
 				String str = list.getSelectedValue().toString();
 				//System.out.println(str+"a");

@@ -33,6 +33,7 @@ public class client_socket extends Thread {
     		  // System.out.println(sentence);
     		   
     		   
+    		   
     	   // print it to the text field
     	   
     	   } catch (IOException e) {
