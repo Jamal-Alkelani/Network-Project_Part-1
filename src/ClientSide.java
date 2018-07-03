@@ -37,10 +37,6 @@ public class ClientSide extends JFrame {
 	private JTextField sentMsg;
 	private JTextField serverIP;
 	private JTextField serverPort;
-	private JTextField localIP;
-	private JTextField localPort;
-	private JLabel lblNewLabel_1;
-	private JLabel lblLocalPort;
 	private JLabel lblServerIp;
 	private JLabel lblServerPort;
 	private JLabel connect;
@@ -51,6 +47,11 @@ public class ClientSide extends JFrame {
 	private DataOutputStream toServer;
 	private BufferedReader inFromServer;
 	private final static JTextArea receivedMsg = new JTextArea();
+	private JLabel disconnect;
+	
+	public JLabel getDisconnect() {
+		return disconnect;
+	}
 
 	public JLabel getConnect() {
 		return connect;
@@ -100,6 +101,13 @@ public class ClientSide extends JFrame {
 		send.setBounds(522, 395, 24, 24);
 		contentPane.add(send);
 		
+
+
+		disconnect = new JLabel("");
+		disconnect.setIcon(new ImageIcon("Images/disconnect.png"));
+		disconnect.setBounds(328, 430, 64, 64);
+		contentPane.add(disconnect);
+		
 		serverIP = new JTextField();
 		serverIP.setBounds(101, 432, 116, 22);
 		contentPane.add(serverIP);
@@ -109,24 +117,6 @@ public class ClientSide extends JFrame {
 		serverPort.setBounds(101, 467, 116, 22);
 		contentPane.add(serverPort);
 		serverPort.setColumns(10);
-		
-		localIP = new JTextField();
-		localIP.setColumns(10);
-		localIP.setBounds(344, 432, 116, 22);
-		contentPane.add(localIP);
-		
-		localPort = new JTextField();
-		localPort.setColumns(10);
-		localPort.setBounds(344, 467, 116, 22);
-		contentPane.add(localPort);
-		
-		lblNewLabel_1 = new JLabel("Local IP");
-		lblNewLabel_1.setBounds(265, 435, 56, 16);
-		contentPane.add(lblNewLabel_1);
-		
-		lblLocalPort = new JLabel("Local Port");
-		lblLocalPort.setBounds(265, 470, 67, 16);
-		contentPane.add(lblLocalPort);
 		
 		lblServerIp = new JLabel("Server IP");
 		lblServerIp.setBounds(12, 432, 56, 16);
@@ -146,8 +136,10 @@ public class ClientSide extends JFrame {
 		receivedMsg.setBounds(12, 13, 534, 361);
 		contentPane.add(receivedMsg);
 		
+		
 		send.addMouseListener(new MouseHandler());
 		connect.addMouseListener(new MouseHandler());
+		disconnect.addMouseListener(new MouseHandler());
 		
 		clientMsgs=new ArrayList<String>();
 		serverMsgs=new ArrayList<String>();
@@ -166,6 +158,8 @@ public class ClientSide extends JFrame {
 					connect.setIcon(new ImageIcon("Images/Connected.png"));
 				}
 				
+			}else if(e.getSource().equals(getDisconnect())){
+				closeConnection();
 			}
 			
 		}
