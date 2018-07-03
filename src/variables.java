@@ -18,6 +18,7 @@ public class variables {
 		
 		  String [] IPs = new String [x];
 		  
+		  
 		  for (int i=0;i<x;i++) {
 			  
 			  IPs[i]= socketArray.get(i).getLocalAddress().toString();
