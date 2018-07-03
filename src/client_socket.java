@@ -33,12 +33,16 @@ public class client_socket extends Thread {
     		  // System.out.println(sentence);
     		   
     		   
-    		   
     	   // print it to the text field
     	   
     	   } catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			variables.socketArray.remove(clientSocket);
+			//System.out.println(variables.socketArray.size());
+			serverUI.setList(variables.getIPs());
+			break;
+			
 		} 
 	          
     	   

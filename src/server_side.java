@@ -62,7 +62,7 @@ public class server_side extends JFrame {
 	}
 	
 	public void setList (String []str) {
-		
+		//System.out.println("here");
 		for (int i=0;i<str.length;i++)
 			//System.out.println(str[i]);
 		list= new JList(str);
