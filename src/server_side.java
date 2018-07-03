@@ -167,7 +167,7 @@ public class server_side extends JFrame {
 				String message = textArea_1.getText()+"\n";
 			
 				textArea.setText( textArea.getText()+ "Server : "+ message);
-				
+				textArea_1.setText("");
 				Socket socket = null ; 
 				
 				for (int i=0;i<variables.socketArray.size();i++) {
@@ -187,7 +187,7 @@ public class server_side extends JFrame {
 					outToClient.writeBytes(message+"\n");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
 				} 
 				
 				
