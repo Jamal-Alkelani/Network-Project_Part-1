@@ -128,7 +128,7 @@ public class server_side extends JFrame {
 		
 		
 		list.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		scrollPane.setViewportView(list);
+		scrollPane.setRowHeaderView(list);
 		
 		
 		scrollPane_1.setBounds(29, 164, 507, 378);
